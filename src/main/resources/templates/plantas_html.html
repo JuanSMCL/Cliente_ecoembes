@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Plantas de Reciclaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+    <!-- Header con navegación -->
+    <header class="bg-white shadow-sm">
+        <div class="container py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a th:href="@{/}" class="text-decoration-none text-dark">
+                        <i class="fas fa-home me-2"></i>Inicio
+                    </a>
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-industry me-1 text-success"></i>
+                    <span class="fs-5">Plantas de Reciclaje</span>
+                </div>
+                <div>
+                    <a th:href="@{/contenedores}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-dumpster me-1"></i>Contenedores
+                    </a>
+                    <a th:href="@{/logout}" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i>Salir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Mensajes -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- 1. CONSULTAR CAPACIDAD DE PLANTAS -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Consultar Capacidad de Plantas</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/plantas/consultar}" method="get" class="row g-3">
+                    <div class="col-md-8">
+                        <label for="plantaId" class="form-label">ID de Planta (opcional - dejar vacío para ver todas)</label>
+                        <input type="text" id="plantaId" name="plantaId" class="form-control" 
+                               placeholder="Ej: PLANTA-001" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-search me-2"></i>Consultar
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Resultado: Lista de plantas -->
+                <div th:if="${plantas != null and !plantas.isEmpty()}" class="mt-4">
+                    <h6 class="text-success mb-3">Plantas disponibles:</h6>
+                    <div class="row">
+                        <div th:each="planta : ${plantas}" class="col-md-6 mb-3">
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-industry text-success me-2"></i>
+                                        <span th:text="${planta.nombre}"></span>
+                                    </h6>
+                                    <p class="mb-1"><strong>ID:</strong> <span th:text="${planta.id}"></span></p>
+                                    <p class="mb-1"><strong>Ubicación:</strong> <span th:text="${planta.ubicacion}"></span></p>
+                                    <p class="mb-1"><strong>Capacidad Total:</strong> <span th:text="${planta.capacidadTotal}"></span> toneladas</p>
+                                    <p class="mb-1"><strong>Capacidad Usada:</strong> <span th:text="${planta.capacidadUsada}"></span> toneladas</p>
+                                    <p class="mb-1"><strong>Capacidad Disponible:</strong> 
+                                        <span class="text-success fw-bold" th:text="${planta.capacidadTotal - planta.capacidadUsada}"></span> toneladas
+                                    </p>
+                                    <div class="progress mt-2" style="height: 25px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             th:style="'width: ' + ${(planta.capacidadUsada * 100.0 / planta.capacidadTotal)} + '%'"
+                                             th:text="${#numbers.formatDecimal((planta.capacidadUsada * 100.0 / planta.capacidadTotal), 1, 1)} + '%'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${plantas != null and plantas.isEmpty()}" class="mt-4 alert alert-warning">
+                    No se encontraron plantas.
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ASIGNAR CONTENEDOR A PLANTA -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-link me-2"></i>Asignar Contenedor a Planta</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/plantas/asignar}" method="post" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="contenedorIdAsignar" class="form-label">ID del Contenedor</label>
+                        <input type="text" id="contenedorIdAsignar" name="contenedorId" 
+                               class="form-control" placeholder="Ej: CONT-001" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="plantaIdAsignar" class="form-label">ID de la Planta</label>
+                        <input type="text" id="plantaIdAsignar" name="plantaId" 
+                               class="form-control" placeholder="Ej: PLANTA-001" required />
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-link me-2"></i>Asignar Contenedor
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Mensaje de asignación exitosa -->
+                <div th:if="${asignacionExitosa}" class="mt-4 alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Contenedor asignado correctamente a la planta.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-white border-top text-center">
+        <p class="mb-0 text-muted small">
+            <i class="fas fa-graduation-cap text-primary me-1"></i>
+            Software Design - Universidad de Deusto (2024)
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

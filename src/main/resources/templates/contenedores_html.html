@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Contenedores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+    <!-- Header con navegación -->
+    <header class="bg-white shadow-sm">
+        <div class="container py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a th:href="@{/}" class="text-decoration-none text-dark">
+                        <i class="fas fa-home me-2"></i>Inicio
+                    </a>
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-dumpster me-1 text-primary"></i>
+                    <span class="fs-5">Contenedores</span>
+                </div>
+                <div>
+                    <a th:href="@{/plantas}" class="btn btn-outline-success me-2">
+                        <i class="fas fa-industry me-1"></i>Plantas
+                    </a>
+                    <a th:href="@{/logout}" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i>Salir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Mensajes -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- 1. CREAR NUEVO CONTENEDOR -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Crear Nuevo Contenedor</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/contenedores/crear}" method="post" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="longitud" class="form-label">Longitud</label>
+                        <input type="text" id="longitud" name="longitud" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="latitud" class="form-label">Latitud</label>
+                        <input type="text" id="latitud" name="latitud" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="codPostal" class="form-label">Código postal</label>
+                        <input type="text" id="codPostal" name="codPostal" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="capacidad" class="form-label">Capacidad máxima (toneladas)</label>
+                        <input type="number" id="capacidad" name="capacidad" class="form-control" 
+                               placeholder="1000" min="1" required />
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Crear Contenedor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. CONSULTAR POR FECHA -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Consultar Uso por Fecha</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/contenedores/consultar-fecha}" method="get" class="row g-3">
+                    <div class="col-md-8">
+                        <label for="contenedorId" class="form-label">ID del Contenedor</label>
+                        <input type="text" id="contenedorId" name="contenedorId" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="fechaIni" class="form-label">Fecha inicial</label>
+                        <input type="date" id="fechaIni" name="fechaIni" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="fechaFin" class="form-label">Fecha final</label>
+                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required />
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Consultar
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Resultado consulta por fecha -->
+                <div th:if="${contenedorFecha != null}" class="mt-4 p-3 bg-light border rounded">
+                    <h6 class="text-primary">Resultado:</h6>
+                    <p><strong>ID:</strong> <span th:text="${contenedorFecha.id}"></span></p>
+                    <p><strong>Longitud:</strong> <span th:text="${contenedorFecha.lon}"></span></p>
+                    <p><strong>Latitud:</strong> <span th:text="${contenedorFecha.lat}"></span> </p>
+                    <p><strong>Código postal:</strong> <span th:text="${contenedorFecha.codPostal}"></span> </p>
+                    <p><strong>Capacidad máxima:</strong> <span th:text="${contenedorFecha.capacidadMax}"></span> toneladas</p>
+
+                    <ul>
+                        <li th:each="estado : ${contenedorFecha.estados}">
+                            <p><strong>Fecha:</strong> <span th:text="${estado.fecha}"></span></p>
+                            <p><strong>Nivel de llenado:</strong> <span th:text="${estado.NivelLlenado}"></span></p>
+                            <p><strong>Capacidad Actual:</strong> <span th:text="${estado.capacidadActual}"></span></p>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. CONSULTAR POR ZONA Y FECHA -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Consultar Contenedores por Zona</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/contenedores/consultar-zona}" method="get" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="codPostalConsulta" class="form-label">Código postal</label>
+                        <input type="text" id="codPostalConsulta" name="codPostalConsulta" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="fechaZona" class="form-label">Fecha</label>
+                        <input type="date" id="fechaZona" name="fechaZona" class="form-control" required />
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-info text-white">
+                            <i class="fas fa-search me-2"></i>Consultar Zona
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Resultado consulta por zona -->
+                <div th:if="${contenedoresZona != null and !contenedoresZona.isEmpty()}" class="mt-4">
+                    <h6 class="text-info">Contenedores encontrados:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-info">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Longitud</th>
+                                    <th>Latitud</th>
+                                    <th>Código postal</th>
+                                    <th>Capacidad máxima</th>
+                                    <th>Capacidad actual </th>
+                                    <th>Nivel de llenado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cont : ${contenedoresZona}">
+                                    <td th:text="${cont.id}"></td>
+                                    <td th:text="${cont.lon}"></td>
+                                    <td th:text="${cont.lat}"></td>
+                                    <td th:text="${cont.codPostal}"></td>
+                                    <td th:text="${cont.capacidadMax}"></td>
+                                    <td th:text="${cont.capacidadActual}"></td>
+                                    <td>
+                                        <span th:if="${cont.nivelLlenado == NivelLlenado.ROJO}" class="badge bg-danger">Lleno</span>
+                                        <span th:if="${cont.nivelLlenado == NivelLlenado.NARANJA}" class="badge bg-warning">Espacio limitado</span>
+                                        <span th:if="${cont.nivelLlenado == NivelLlenado.VERDE}" class="badge bg-success">Espacio disponible</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div th:if="${contenedoresZona != null and contenedoresZona.isEmpty()}" class="mt-4 alert alert-warning">
+                    No se encontraron contenedores en esta zona.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-white border-top text-center">
+        <p class="mb-0 text-muted small">
+            <i class="fas fa-graduation-cap text-primary me-1"></i>
+            Diseño de Software - Universidad de Deusto
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
