@@ -53,9 +53,8 @@
             <div class="card-body">
                 <form th:action="@{/plantas/consultar}" method="get" class="row g-3">
                     <div class="col-md-8">
-                        <label for="plantaId" class="form-label">ID de Planta (opcional - dejar vacío para ver todas)</label>
-                        <input type="text" id="plantaId" name="plantaId" class="form-control" 
-                               placeholder="Ej: PLANTA-001" />
+                        <label for="plantaFecha" class="form-label">Fecha</label>
+                        <input type="date" id="plantaFecha" name="plantaFecha" class="form-control"/>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-100">
@@ -75,13 +74,12 @@
                                         <i class="fas fa-industry text-success me-2"></i>
                                         <span th:text="${planta.nombre}"></span>
                                     </h6>
-                                    <p class="mb-1"><strong>ID:</strong> <span th:text="${planta.id}"></span></p>
-                                    <p class="mb-1"><strong>Ubicación:</strong> <span th:text="${planta.ubicacion}"></span></p>
-                                    <p class="mb-1"><strong>Capacidad Total:</strong> <span th:text="${planta.capacidadTotal}"></span> toneladas</p>
-                                    <p class="mb-1"><strong>Capacidad Usada:</strong> <span th:text="${planta.capacidadUsada}"></span> toneladas</p>
-                                    <p class="mb-1"><strong>Capacidad Disponible:</strong> 
-                                        <span class="text-success fw-bold" th:text="${planta.capacidadTotal - planta.capacidadUsada}"></span> toneladas
-                                    </p>
+                                    <p class="mb-1"><strong>Longitud:</strong> <span th:text="${planta.lon}"></span></p>
+                                    <p class="mb-1"><strong>Latitud:</strong> <span th:text="${planta.lat}"></span></p>
+                                    <p class="mb-1"><strong>Nombre:</strong> <span th:text="${planta.nombre}"></span> </p>
+                                    <p class="mb-1"><strong>Fecha:</strong> <span th:text="${planta.fecha}"></span> </p>
+                                    <p class="mb-1"><strong>Capacidad:</strong> <span th:text="${planta.capacidad}"></span> toneladas</p>
+
                                     <div class="progress mt-2" style="height: 25px;">
                                         <div class="progress-bar bg-success" role="progressbar" 
                                              th:style="'width: ' + ${(planta.capacidadUsada * 100.0 / planta.capacidadTotal)} + '%'"
@@ -100,34 +98,48 @@
             </div>
         </div>
 
-        <!-- 2. ASIGNAR CONTENEDOR A PLANTA -->
+        <!-- 3. CREAR RUTA -->
         <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="fas fa-link me-2"></i>Asignar Contenedor a Planta</h5>
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-route me-2"></i>Crear Ruta</h5>
             </div>
             <div class="card-body">
-                <form th:action="@{/plantas/asignar}" method="post" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="contenedorIdAsignar" class="form-label">ID del Contenedor</label>
-                        <input type="text" id="contenedorIdAsignar" name="contenedorId" 
-                               class="form-control" placeholder="Ej: CONT-001" required />
+                <form th:action="@{/ruta}" method="post" class="row g-3">
+
+                    <div class="col-md-12">
+                        <label for="idsContenedores" class="form-label">IDs de Contenedores</label>
+                        <textarea id="idsContenedores" name="idsContenedores"
+                                  class="form-control" rows="3"
+                                  placeholder="Ejemplo: 0, 1, 2" required></textarea>
+                        <div class="form-text">Ingresa los IDs separados por comas</div>
                     </div>
+
                     <div class="col-md-6">
-                        <label for="plantaIdAsignar" class="form-label">ID de la Planta</label>
-                        <input type="text" id="plantaIdAsignar" name="plantaId" 
-                               class="form-control" placeholder="Ej: PLANTA-001" required />
+                        <label for="idCamion" class="form-label">ID del Camión</label>
+                        <input type="number" id="idCamion" name="idCamion"
+                               class="form-control" placeholder="0" required />
                     </div>
+
+                    <div class="col-md-6">
+                        <label for="planta" class="form-label">Planta de Reciclaje</label>
+                        <select id="planta" name="planta" class="form-select" required>
+                            <option value="">Seleccione una planta</option>
+                            <option value="PLAS_SB">PLAS_SB</option>
+                            <option value="CONT_SOCKET">CONT_SOCKET</option>
+                        </select>
+                    </div>
+
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-link me-2"></i>Asignar Contenedor
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-plus-circle me-2"></i>Crear Ruta
                         </button>
                     </div>
                 </form>
-                
-                <!-- Mensaje de asignación exitosa -->
-                <div th:if="${asignacionExitosa}" class="mt-4 alert alert-success">
+
+                <!-- Mensaje de creación exitosa -->
+                <div th:if="${rutaCreada}" class="mt-4 alert alert-success">
                     <i class="fas fa-check-circle me-2"></i>
-                    Contenedor asignado correctamente a la planta.
+                    Ruta creada correctamente.
                 </div>
             </div>
         </div>
@@ -136,7 +148,7 @@
     <footer class="mt-5 py-3 bg-white border-top text-center">
         <p class="mb-0 text-muted small">
             <i class="fas fa-graduation-cap text-primary me-1"></i>
-            Software Design - Universidad de Deusto (2024)
+            Diseño de Software - Universidad de Deusto
         </p>
     </footer>
 

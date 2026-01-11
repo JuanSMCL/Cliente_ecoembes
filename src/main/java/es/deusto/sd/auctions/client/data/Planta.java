@@ -1,9 +1,13 @@
 package es.deusto.sd.auctions.client.data;
 
+import java.time.LocalDate;
+
 // Este es para el endpoint de listar plantas
 public record Planta(
-        long id,
+        double lon,
+        double lat,
         String nombre,
-        String ubicacion
+        LocalDate fecha,
+        int capacidad
 ) {
 }
