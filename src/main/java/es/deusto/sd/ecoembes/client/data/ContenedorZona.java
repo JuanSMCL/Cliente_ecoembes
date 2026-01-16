@@ -1,6 +1,4 @@
-package es.deusto.sd.auctions.client.data;
-
-import java.time.LocalDate;
+package es.deusto.sd.ecoembes.client.data;
 
 public record ContenedorZona(
          Long id,

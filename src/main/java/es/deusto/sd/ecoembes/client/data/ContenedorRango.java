@@ -1,6 +1,5 @@
-package es.deusto.sd.auctions.client.data;
+package es.deusto.sd.ecoembes.client.data;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public record ContenedorRango(

@@ -1,13 +1,11 @@
 package es.deusto.sd.auctions.client.web;
 
 import es.deusto.sd.auctions.client.data.ContenedorRango;
-import es.deusto.sd.auctions.client.data.Usuario;
 import es.deusto.sd.auctions.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -17,7 +15,6 @@ import java.time.LocalDate;
 public class WebController {
 
     private final IServiceProxy proxy;
-    private String token;
 
     public WebController(IServiceProxy proxy) {
         this.proxy = proxy;
@@ -49,31 +46,6 @@ public class WebController {
 
         // Nombre del html
         return "contenedor";
-    }
-
-    @GetMapping("/login")
-    public String mostrarLogin(
-    ) {
-
-
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String logear(@RequestParam("username") String email,
-                         @RequestParam("password") String password,
-                         Model model)
-    {
-        Usuario usuario = new Usuario(email, password);
-        try {
-            this.token = proxy.logear(usuario);
-            return "index";
-        } catch (Exception e){
-            model.addAttribute("errorMessage", e.getMessage());
-            return "login";
-        }
-
-
     }
 
 
