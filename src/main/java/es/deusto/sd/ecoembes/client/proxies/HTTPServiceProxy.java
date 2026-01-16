@@ -1,7 +1,7 @@
-package es.deusto.sd.auctions.client.proxies;
+package es.deusto.sd.ecoembes.client.proxies;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.deusto.sd.auctions.client.data.ContenedorRango;
+import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 
 import java.net.URI;
 import java.net.http.HttpClient;

@@ -1,7 +1,7 @@
-package es.deusto.sd.auctions.client.web;
+package es.deusto.sd.ecoembes.client.web;
 
-import es.deusto.sd.auctions.client.data.ContenedorRango;
-import es.deusto.sd.auctions.client.proxies.IServiceProxy;
+import es.deusto.sd.ecoembes.client.data.ContenedorRango;
+import es.deusto.sd.ecoembes.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
