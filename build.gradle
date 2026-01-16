@@ -24,15 +24,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
-// Task to run the console client
-task runConsoleClient(type: JavaExec) {
-    group = 'application'
-    description = 'Run the Console Client'
-    mainClass = 'es.deusto.sd.ecoembes.client.console.ConsoleClient'
-    classpath = sourceSets.main.runtimeClasspath
+application {
+    mainClass = "org.example.ecoembes-client.WebClientApplication"
 }
-
-
 
 // Spring Boot configuration, defaults to running the web client
 bootRun {

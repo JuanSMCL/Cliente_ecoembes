@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.Usuario;
 import es.deusto.sd.ecoembes.client.proxies.HTTPServiceProxy;
+import es.deusto.sd.ecoembes.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,16 +22,14 @@ import java.time.LocalDate;
 
 
 @Controller
-
 public class WebController {
 
-    private final HTTPServiceProxy proxy;
+    private final IServiceProxy proxy;
     private ObjectMapper objectMapper = new ObjectMapper();
     private HttpClient httpClient = HttpClient.newHttpClient();
     private String token;
 
-    public WebController(HTTPServiceProxy proxy) {
-
+    public WebController(IServiceProxy proxy) {
         this.proxy = proxy;
     }
 
@@ -45,28 +44,27 @@ public class WebController {
         // Lo que haya entre los "" tiene que coincidir con lo que ponga en el html
     @GetMapping("/contenedores/consultarFecha")
     public String consultaContenedorPorFecha(
-            @RequestParam long id,
-            @RequestParam LocalDate fIni,
-            @RequestParam LocalDate fFin,
-
-            // Hay que conseguir esto del login
-            @ModelAttribute("token") long token,
+            @RequestParam long contenedorId,
+            @RequestParam LocalDate fechaIni,
+            @RequestParam LocalDate fechaFin,
             Model model){
 
-        ContenedorRango resultado = proxy.consultarEstadoContenedor(id, fIni, fFin, token);
+       if (token != null){
+           ContenedorRango resultado = proxy.consultarEstadoContenedor(contenedorId, fechaIni, fechaFin, token);
 
-        // Esto para el HTML
-        model.addAttribute("contenedorFecha", resultado);
+           // Esto para el HTML
+           model.addAttribute("contenedorFecha", resultado);
 
-        // Nombre del html
-        return "contenedor";
+           return "contenedores";
+       }else{
+           return "login";
+       }
     }
 
+    // Func 1: Login
     @GetMapping("/login")
     public String mostrarLogin(
     ) {
-
-
         return "login";
     }
 

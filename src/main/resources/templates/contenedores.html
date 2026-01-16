@@ -88,20 +88,21 @@
                 <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Consultar Uso por Fecha</h5>
             </div>
             <div class="card-body">
-                <form th:action="@{/contenedores/consultar-fecha}" method="get" class="row g-3">
+                <form th:action="@{/contenedores/consultarFecha}" method="get" class="row g-3">
                     <div class="col-md-8">
                         <label for="contenedorId" class="form-label">ID del Contenedor</label>
-                        <input type="text" id="contenedorId" name="contenedorId" class="form-control" required />
+                        <input type="text" id="contenedorId" name="contenedorId" class="form-control" required
+                        placeholder="3"/>
                     </div>
 
                     <div class="col-md-4">
                         <label for="fechaIni" class="form-label">Fecha inicial</label>
-                        <input type="date" id="fechaIni" name="fechaIni" class="form-control" required />
+                        <input type="date" id="fechaIni" name="fechaIni" class="form-control" required value="2025-11-03"/>
                     </div>
 
                     <div class="col-md-4">
                         <label for="fechaFin" class="form-label">Fecha final</label>
-                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required />
+                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required value="2025-11-09"/>
                     </div>
 
                     <div class="col-12">
@@ -123,7 +124,7 @@
                     <ul>
                         <li th:each="estado : ${contenedorFecha.estados}">
                             <p><strong>Fecha:</strong> <span th:text="${estado.fecha}"></span></p>
-                            <p><strong>Nivel de llenado:</strong> <span th:text="${estado.NivelLlenado}"></span></p>
+                            <p><strong>Nivel de llenado:</strong> <span th:text="${estado.nivelLlenado}"></span></p>
                             <p><strong>Capacidad Actual:</strong> <span th:text="${estado.capacidadActual}"></span></p>
                         </li>
                     </ul>

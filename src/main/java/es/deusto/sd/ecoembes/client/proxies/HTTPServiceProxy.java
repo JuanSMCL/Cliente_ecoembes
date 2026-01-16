@@ -1,6 +1,8 @@
 package es.deusto.sd.ecoembes.client.proxies;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.Usuario;
 
@@ -18,40 +20,48 @@ public class HTTPServiceProxy implements IServiceProxy {
 
     public HTTPServiceProxy(HttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
+
+        // Solución de CHATGPT ante error de fechas de Estado en la función 4
+            // Registrar módulo para Java 8 Time y configurar fechas ISO
+        this.objectMapper = objectMapper.copy(); // Copiar para no modificar otros usos
+        this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    // Func 4: Consultar estado contenedor
     @Override
-    public es.deusto.sd.ecoembes.client.data.ContenedorRango consultarEstadoContenedor(Long id, LocalDate fIni, LocalDate fFin, long token) {
+    public es.deusto.sd.ecoembes.client.data.ContenedorRango consultarEstadoContenedor(Long id, LocalDate fIni, LocalDate fFin, String token) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/contenedores/"+ id
-                            +"?fechaIni="+ fIni
-                            + "&fechaFin=" + fFin
+                    .uri(URI.create(BASE_URL + "/contenedor/"+ id
+                            +"?fIni="+ fIni
+                            + "&fFin=" + fFin
                             + "&token=" + token))
                     .GET()
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 200){
-                return objectMapper.readValue(
-                        response.body(),
+            return switch (response.statusCode()) {
+                case 200 ->  objectMapper.readValue(response.body(),
                         ContenedorRango.class);
-            }
+                case 404 -> throw new RuntimeException("Contenedor no encontrado");
+                default -> throw new RuntimeException("Consulta de contenedor por fecha ha fallado, code: " + response.statusCode());
+            };
 
         }catch(Exception e){
-            e.printStackTrace();
+            throw new RuntimeException("Ha habido un error al procesar la peticion", e);
         }
-        return null;
     }
 
+    // Func 1: Login
     @Override
     public String logear(Usuario usuario)  {
         try{
             String json = objectMapper.writeValueAsString(usuario);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create((BASE_URL + "/login")))
+                    .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
