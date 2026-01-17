@@ -3,15 +3,13 @@ package es.deusto.sd.ecoembes.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
+import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.Usuario;
 import es.deusto.sd.ecoembes.client.proxies.HTTPServiceProxy;
 import es.deusto.sd.ecoembes.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,6 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Controller
@@ -82,6 +81,49 @@ public class WebController {
             return "login";
         }
 
+    }
+
+    @PostMapping("/logout/{token}")
+    public String logear(@PathVariable("token") String token,
+                         Model model)
+    {
+        try {
+            boolean resultado = proxy.logout(token);
+            if (resultado){
+                model.addAttribute("successMessage", "Logout successful.");
+                return "login";
+            }else {
+                model.addAttribute("errorMessage", "Token not found");
+                return "index";
+            }
+
+        } catch (Exception e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "index";
+        }
+
+    }
+
+    @GetMapping("/plantas")
+    public String verPlantas() {
+        return "plantas";
+    }
+
+    @GetMapping("/plantas/consultar")
+    public String consultaPlantaCapacidad(
+            @RequestParam LocalDate plantaFecha,
+
+            // Hay que conseguir esto del login
+            @ModelAttribute("token") long token,
+            Model model){
+
+        List<PlantaDTOCap> resultado = proxy.consultarCapacidadPlantas(plantaFecha, token);
+
+        // Esto para el HTML
+        model.addAttribute("plantas", resultado);
+
+        // Nombre del html
+        return "plantas";
     }
 
 

@@ -80,12 +80,6 @@
                                     <p class="mb-1"><strong>Fecha:</strong> <span th:text="${planta.fecha}"></span> </p>
                                     <p class="mb-1"><strong>Capacidad:</strong> <span th:text="${planta.capacidad}"></span> toneladas</p>
 
-                                    <div class="progress mt-2" style="height: 25px;">
-                                        <div class="progress-bar bg-success" role="progressbar" 
-                                             th:style="'width: ' + ${(planta.capacidadUsada * 100.0 / planta.capacidadTotal)} + '%'"
-                                             th:text="${#numbers.formatDecimal((planta.capacidadUsada * 100.0 / planta.capacidadTotal), 1, 1)} + '%'">
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
