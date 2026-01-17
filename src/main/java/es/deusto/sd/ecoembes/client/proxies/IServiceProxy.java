@@ -14,7 +14,7 @@ public interface IServiceProxy {
     ContenedorRango consultarEstadoContenedor(Long id, LocalDate fIni, LocalDate fFin, String token);
     String logear(Usuario usuario);
     boolean logout(String token);
-    List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, long token);
+    List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, String token);
     List<String> getPlantas();
     void crearRuta(String token, RutaDTO ruta);
     void crearContenedor(String token, ContenedorCreacion contenedor);

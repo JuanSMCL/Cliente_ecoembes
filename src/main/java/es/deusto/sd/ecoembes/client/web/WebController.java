@@ -121,10 +121,13 @@ public class WebController {
 
 
 
-    @PostMapping("/logout/{token}")
-    public String logear(@PathVariable("token") String token,
-                         Model model)
+    @PostMapping("/logout")
+    public String logout(Model model)
     {
+        if(token == null){
+            System.out.println("ver login");
+            return "redirect:/index";
+        }
         try {
             boolean resultado = proxy.logout(token);
             if (resultado){
@@ -151,17 +154,22 @@ public class WebController {
     @GetMapping("/plantas/consultar")
     public String consultaPlantaCapacidad(
             @RequestParam LocalDate plantaFecha,
-
-            // Hay que conseguir esto del login
-            @ModelAttribute("token") long token,
             Model model){
 
-        List<PlantaDTOCap> resultado = proxy.consultarCapacidadPlantas(plantaFecha, token);
+        if (token == null) {
+            return "redirect:/login";
+        }
 
-        // Esto para el HTML
-        model.addAttribute("plantas", resultado);
+        try {
+            List<PlantaDTOCap> resultado =
+                    proxy.consultarCapacidadPlantas(plantaFecha, token);
 
-        // Nombre del html
+            model.addAttribute("plantas", resultado);
+
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
         return "plantas";
     }
     
