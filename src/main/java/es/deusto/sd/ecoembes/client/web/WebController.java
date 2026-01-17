@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
+import es.deusto.sd.ecoembes.client.data.ContenedorZona;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.RutaDTO;
 import es.deusto.sd.ecoembes.client.data.Usuario;
@@ -191,6 +192,29 @@ public class WebController {
         return "contenedores";
     }
 
+    //Funcion 5
+    @GetMapping("/contenedores/consultarZona")
+    public String consultarContenedoresZona(
+            @RequestParam String codPostal,
+            @RequestParam LocalDate fecha,
+            Model model
+    ) {
+        if (token == null) {
+            return "redirect:/index";
+        }
+
+        try {
+            List<ContenedorZona> resultado =
+                    proxy.consultarEstadoContenedoresZona(codPostal, fecha, token);
+
+            model.addAttribute("contenedoresZona", resultado);
+
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        return "contenedores";
+    }
 
 
 

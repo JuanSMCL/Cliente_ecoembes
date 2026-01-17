@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
+import es.deusto.sd.ecoembes.client.data.ContenedorZona;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.RutaDTO;
 import es.deusto.sd.ecoembes.client.data.Usuario;
@@ -208,5 +209,42 @@ public class HTTPServiceProxy implements IServiceProxy {
             throw new RuntimeException("Error al crear el contenedor", e);
         }
     }
+    //Funcion 5
+    @Override
+    public List<ContenedorZona> consultarEstadoContenedoresZona(
+            String codPostal,
+            LocalDate fecha,
+            String token
+    ) {
+        try {
+            String url = BASE_URL + "/contenedores/zona"
+                    + "?codPostal=" + codPostal
+                    + "&fecha=" + fecha
+                    + "&token=" + token;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response =
+                    httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            return switch (response.statusCode()) {
+                case 200 -> objectMapper.readValue(
+                        response.body(),
+                        new TypeReference<List<ContenedorZona>>() {}
+                );
+                case 404 -> throw new RuntimeException("No hay contenedores en esa zona");
+                default -> throw new RuntimeException(
+                        "Error al consultar contenedores por zona. Código: " + response.statusCode()
+                );
+            };
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Error al consultar contenedores por zona", e);
+        }
+    }
+
 
 }
