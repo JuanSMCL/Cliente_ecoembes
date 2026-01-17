@@ -7,145 +7,160 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-light">
-    <!-- Header con navegación -->
-    <header class="bg-white shadow-sm">
-        <div class="container py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <a th:href="@{/}" class="text-decoration-none text-dark">
-                        <i class="fas fa-home me-2"></i>Inicio
-                    </a>
-                    <span class="mx-2">|</span>
-                    <i class="fas fa-industry me-1 text-success"></i>
-                    <span class="fs-5">Plantas de Reciclaje</span>
-                </div>
-                <div>
-                    <a th:href="@{/contenedores}" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-dumpster me-1"></i>Contenedores
-                    </a>
-                    <a th:href="@{/logout}" class="btn btn-danger">
-                        <i class="fas fa-sign-out-alt me-1"></i>Salir
-                    </a>
-                </div>
+<!-- Header con navegación -->
+<header class="bg-white shadow-sm">
+    <div class="container py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <a th:href="@{/}" class="text-decoration-none text-dark">
+                    <i class="fas fa-home me-2"></i>Inicio
+                </a>
+                <span class="mx-2">|</span>
+                <i class="fas fa-industry me-1 text-success"></i>
+                <span class="fs-5">Plantas de Reciclaje</span>
+            </div>
+            <div>
+                <a th:href="@{/contenedores}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-dumpster me-1"></i>Contenedores
+                </a>
+                <a th:href="@{/logout}" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt me-1"></i>Salir
+                </a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <div class="container mt-4">
-        <!-- Mensajes -->
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <span th:text="${errorMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="container mt-4">
+    <!-- Mensajes -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- 1. CONSULTAR CAPACIDAD DE PLANTAS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Consultar Capacidad de Plantas</h5>
         </div>
-        
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
-            <i class="fas fa-check-circle me-2"></i>
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="card-body">
+            <form th:action="@{/plantas/consultar}" method="get" class="row g-3">
+                <div class="col-md-8">
+                    <label for="plantaFecha" class="form-label">Fecha</label>
+                    <input type="date" id="plantaFecha" name="plantaFecha" class="form-control"/>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-search me-2"></i>Consultar
+                    </button>
+                </div>
+            </form>
 
-        <!-- 1. CONSULTAR CAPACIDAD DE PLANTAS -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Consultar Capacidad de Plantas</h5>
-            </div>
-            <div class="card-body">
-                <form th:action="@{/plantas/consultar}" method="get" class="row g-3">
-                    <div class="col-md-8">
-                        <label for="plantaFecha" class="form-label">Fecha</label>
-                        <input type="date" id="plantaFecha" name="plantaFecha" class="form-control"/>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="fas fa-search me-2"></i>Consultar
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Resultado: Lista de plantas -->
-                <div th:if="${plantas != null and !plantas.isEmpty()}" class="mt-4">
-                    <h6 class="text-success mb-3">Plantas disponibles:</h6>
-                    <div class="row">
-                        <div th:each="planta : ${plantas}" class="col-md-6 mb-3">
-                            <div class="card border-success">
-                                <div class="card-body">
-                                    <h6 class="card-title">
-                                        <i class="fas fa-industry text-success me-2"></i>
-                                        <span th:text="${planta.nombre}"></span>
-                                    </h6>
-                                    <p class="mb-1"><strong>Longitud:</strong> <span th:text="${planta.lon}"></span></p>
-                                    <p class="mb-1"><strong>Latitud:</strong> <span th:text="${planta.lat}"></span></p>
-                                    <p class="mb-1"><strong>Nombre:</strong> <span th:text="${planta.nombre}"></span> </p>
-                                    <p class="mb-1"><strong>Fecha:</strong> <span th:text="${planta.fecha}"></span> </p>
-                                    <p class="mb-1"><strong>Capacidad:</strong> <span th:text="${planta.capacidad}"></span> toneladas</p>
+            <!-- Resultado: Lista de plantas -->
+            <div th:if="${plantas != null and !plantas.isEmpty()}" class="mt-4">
+                <h6 class="text-success mb-3">Plantas disponibles:</h6>
+                <div class="row">
+                    <div th:each="planta : ${plantas}" class="col-md-6 mb-3">
+                        <div class="card border-success">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-industry text-success me-2"></i>
+                                    <span th:text="${planta.nombre}"></span>
+                                </h6>
+                                <p class="mb-1"><strong>Longitud:</strong> <span th:text="${planta.lon}"></span></p>
+                                <p class="mb-1"><strong>Latitud:</strong> <span th:text="${planta.lat}"></span></p>
+                                <p class="mb-1"><strong>Nombre:</strong> <span th:text="${planta.nombre}"></span> </p>
+                                <p class="mb-1"><strong>Fecha:</strong> <span th:text="${planta.fecha}"></span> </p>
+                                <p class="mb-1"><strong>Capacidad:</strong> <span th:text="${planta.capacidad}"></span> toneladas</p>
 
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div th:if="${plantas != null and plantas.isEmpty()}" class="mt-4 alert alert-warning">
-                    No se encontraron plantas.
-                </div>
             </div>
-        </div>
 
-        <!-- 3. CREAR RUTA -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0"><i class="fas fa-route me-2"></i>Crear Ruta</h5>
-            </div>
-            <div class="card-body">
-                <form th:action="@{/ruta}" method="post" class="row g-3">
-
-                    <div class="col-md-12">
-                        <label for="idsContenedores" class="form-label">IDs de Contenedores</label>
-                        <textarea id="idsContenedores" name="idsContenedores"
-                                  class="form-control" rows="3"
-                                  placeholder="Ejemplo: 0, 1, 2" required></textarea>
-                        <div class="form-text">Ingresa los IDs separados por comas</div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="idCamion" class="form-label">ID del Camión</label>
-                        <input type="number" id="idCamion" name="idCamion"
-                               class="form-control" placeholder="0" required />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="planta" class="form-label">Planta de Reciclaje</label>
-                        <select id="planta" name="planta" class="form-select" required>
-                            <option value="">Seleccione una planta</option>
-                            <option value="PLAS_SB">PLAS_SB</option>
-                            <option value="CONT_SOCKET">CONT_SOCKET</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-warning">
-                            <i class="fas fa-plus-circle me-2"></i>Crear Ruta
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Mensaje de creación exitosa -->
-                <div th:if="${rutaCreada}" class="mt-4 alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>
-                    Ruta creada correctamente.
-                </div>
+            <div th:if="${plantas != null and plantas.isEmpty()}" class="mt-4 alert alert-warning">
+                No se encontraron plantas.
             </div>
         </div>
     </div>
 
-    <footer class="mt-5 py-3 bg-white border-top text-center">
-        <p class="mb-0 text-muted small">
-            <i class="fas fa-graduation-cap text-primary me-1"></i>
-            Diseño de Software - Universidad de Deusto
-        </p>
-    </footer>
+    <!-- 3. CREAR RUTA -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-route me-2"></i>Crear Ruta</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/rutas}" method="post" class="row g-3" id="formRuta">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                <div class="col-md-12">
+                    <label for="idsContenedores" class="form-label">IDs de Contenedores</label>
+                    <textarea id="idsContenedores" name="idsContenedores"
+                              class="form-control" rows="3"
+                              placeholder="Ejemplo: 0, 1, 2" required></textarea>
+                    <div class="form-text">Ingresa los IDs separados por comas</div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="camion" class="form-label">ID del Camión</label>
+                    <input type="number" id="camion" name="camion"
+                           class="form-control" placeholder="0" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label for="plantaReciclaje" class="form-label">Planta de Reciclaje</label>
+                    <select id="plantaReciclaje" name="plantaReciclaje" class="form-select" required>
+                        <option value="">Seleccione una planta</option>
+                        <option th:each="planta : ${plantasReciclaje}" th:value="${planta}" th:text="${planta}"></option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Ruta
+                    </button>
+                </div>
+            </form>
+
+            <!-- Mensaje de creación exitosa -->
+            <div th:if="${rutaCreada}" class="mt-4 alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>
+                Ruta creada correctamente.
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-5 py-3 bg-white border-top text-center">
+    <p class="mb-0 text-muted small">
+        <i class="fas fa-graduation-cap text-primary me-1"></i>
+        Diseño de Software - Universidad de Deusto
+    </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('formRuta').addEventListener('submit', function(e) {
+        const contenedoresInput = document.getElementById('idsContenedores');
+        const contenedoresArray = contenedoresInput.value.split(',').map(id => id.trim());
+
+        contenedoresInput.remove();
+
+        contenedoresArray.forEach(id => {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'contenedores';
+            hiddenInput.value = id;
+            this.appendChild(hiddenInput);
+        });
+    });
+</script>
 </body>
 </html>

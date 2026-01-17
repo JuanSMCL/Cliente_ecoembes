@@ -4,23 +4,20 @@ package es.deusto.sd.ecoembes.client.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
+import es.deusto.sd.ecoembes.client.data.RutaDTO;
 import es.deusto.sd.ecoembes.client.data.Usuario;
-import es.deusto.sd.ecoembes.client.proxies.HTTPServiceProxy;
 import es.deusto.sd.ecoembes.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.List;
 
 
 @Controller
+
 public class WebController {
 
     private final IServiceProxy proxy;
@@ -56,15 +53,16 @@ public class WebController {
 
            return "contenedores";
        }else{
-           return "login";
+           return "redirect:/index";
        }
     }
 
-    // Func 1: Login
     @GetMapping("/login")
     public String mostrarLogin(
     ) {
-        return "login";
+
+
+        return "index";
     }
 
     @PostMapping("/login")
@@ -75,13 +73,52 @@ public class WebController {
         Usuario usuario = new Usuario(email, password);
         try {
             this.token = proxy.logear(usuario);
-            return "index";
+            return "menu";
         } catch (Exception e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "login";
+            return "index";
         }
 
     }
+
+    @PostMapping("/rutas")
+    public String crearRuta(
+        @RequestParam("camion") Long camionId,
+        @RequestParam("plantaReciclaje") String plantaReciclaje,
+        @RequestParam("contenedores") List<Long> contenedoresId,
+        Model model
+    ){
+
+        RutaDTO ruta = new RutaDTO(contenedoresId, camionId, plantaReciclaje);
+        try {
+            proxy.crearRuta(token, ruta);
+            model.addAttribute("successMessage", "Ruta creada correctamente");
+            model.addAttribute("rutaCreada", true);
+
+        } catch (Exception e){
+            model.addAttribute("errorMessage", "Error al crear la ruta");
+        }
+
+        List<String> plantasReciclaje = proxy.getPlantas();
+        model.addAttribute("plantasReciclaje", plantasReciclaje);
+
+        return "plantas";
+
+
+    }
+
+    @GetMapping("/menu")
+    public String mostrarIndex(Model model){
+        System.out.println("token" + token);
+        if(token == null){
+            System.out.println("ver login");
+            return "redirect:/index";
+        }
+
+        return "menu";
+    }
+
+
 
     @PostMapping("/logout/{token}")
     public String logear(@PathVariable("token") String token,
@@ -91,21 +128,22 @@ public class WebController {
             boolean resultado = proxy.logout(token);
             if (resultado){
                 model.addAttribute("successMessage", "Logout successful.");
-                return "login";
+                return "index";
             }else {
                 model.addAttribute("errorMessage", "Token not found");
-                return "index";
+                return "menu";
             }
 
         } catch (Exception e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "index";
+            return "menu";
         }
 
     }
 
     @GetMapping("/plantas")
-    public String verPlantas() {
+    public String verPlantas(Model model) {
+        model.addAttribute("plantasReciclaje", proxy.getPlantas());
         return "plantas";
     }
 
