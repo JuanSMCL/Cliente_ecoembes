@@ -167,7 +167,7 @@ public class HTTPServiceProxy implements IServiceProxy {
             System.out.println("RUTA: " + ruta);
             System.out.println("Token: " + token);
             String json = objectMapper.writeValueAsString(ruta);
-
+            System.out.printf("Json " + json);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/ruta?token=" + token))
                     .header("Content-Type", "application/json")

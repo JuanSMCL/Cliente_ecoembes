@@ -23,8 +23,6 @@ import java.util.List;
 public class WebController {
 
     private final IServiceProxy proxy;
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private HttpClient httpClient = HttpClient.newHttpClient();
     private String token;
 
     public WebController(IServiceProxy proxy) {
@@ -98,7 +96,7 @@ public class WebController {
             model.addAttribute("rutaCreada", true);
 
         } catch (Exception e){
-            model.addAttribute("errorMessage", "Error al crear la ruta");
+            model.addAttribute("errorMessage", e.getMessage());
         }
 
         List<String> plantasReciclaje = proxy.getPlantas();

@@ -8,5 +8,5 @@ public record RutaDTO(
 
     Long idCamion,
 
-    String planta
+    String idPlantaReciclaje
 ){}
