@@ -1,5 +1,6 @@
 package es.deusto.sd.ecoembes.client.proxies;
 
+import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.RutaDTO;
@@ -15,4 +16,6 @@ public interface IServiceProxy {
     List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, long token);
     List<String> getPlantas();
     void crearRuta(String token, RutaDTO ruta);
+    void crearContenedor(String token, ContenedorCreacion contenedor);
+
 }

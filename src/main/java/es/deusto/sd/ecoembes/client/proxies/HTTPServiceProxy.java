@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.RutaDTO;
@@ -183,4 +185,28 @@ public class HTTPServiceProxy implements IServiceProxy {
         }
 
     }
+    //Funcion 3: Crear contenedor
+    @Override
+    public void crearContenedor(String token, ContenedorCreacion contenedor) {
+        try {
+            String json = objectMapper.writeValueAsString(contenedor);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/contenedor?token=" + token))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response =
+                    httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200 && response.statusCode() != 201) {
+                throw new RuntimeException("Error al crear el contenedor: " + response.body());
+            }
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Error al crear el contenedor", e);
+        }
+    }
+
 }

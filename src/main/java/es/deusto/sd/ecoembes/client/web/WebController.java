@@ -2,6 +2,8 @@ package es.deusto.sd.ecoembes.client.web;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
 import es.deusto.sd.ecoembes.client.data.ContenedorRango;
 import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
 import es.deusto.sd.ecoembes.client.data.RutaDTO;
@@ -163,6 +165,34 @@ public class WebController {
         // Nombre del html
         return "plantas";
     }
+    
+    //Funcion 3
+    
+    @PostMapping("/contenedor/crear")
+    public String crearContenedor(
+            @RequestParam double lon,
+            @RequestParam double lat,
+            @RequestParam String codPostal,
+            @RequestParam int capacidadMax,
+            Model model
+    ) {
+        if (token == null) {
+            return "redirect:/index";
+        }
+
+        ContenedorCreacion contenedor =
+                new ContenedorCreacion(lon, lat, codPostal, capacidadMax);
+
+        try {
+            proxy.crearContenedor(token, contenedor);
+            model.addAttribute("successMessage", "Contenedor creado correctamente");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        return "contenedores";
+    }
+
 
 
 
