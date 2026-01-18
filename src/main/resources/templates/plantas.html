@@ -76,12 +76,24 @@
                                     <i class="fas fa-industry text-success me-2"></i>
                                     <span th:text="${planta.nombre}"></span>
                                 </h6>
-                                <p class="mb-1"><strong>Longitud:</strong> <span th:text="${planta.lon}"></span></p>
-                                <p class="mb-1"><strong>Latitud:</strong> <span th:text="${planta.lat}"></span></p>
-                                <p class="mb-1"><strong>Nombre:</strong> <span th:text="${planta.nombre}"></span> </p>
-                                <p class="mb-1"><strong>Fecha:</strong> <span th:text="${planta.fecha}"></span> </p>
-                                <p class="mb-1"><strong>Capacidad:</strong> <span th:text="${planta.capacidad}"></span> toneladas</p>
-
+                                <div class="mb-2">
+                                    <span class="badge bg-success" th:text="${planta.planta}"></span>
+                                </div>
+                                <p class="mb-1">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                    <strong>Ubicación:</strong>
+                                    <span th:text="${planta.lat} + ', ' + ${planta.lon}"></span>
+                                </p>
+                                <p class="mb-1">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>Fecha:</strong>
+                                    <span th:text="${planta.fecha}"></span>
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-weight text-warning me-2"></i>
+                                    <strong>Capacidad:</strong>
+                                    <span th:text="${planta.capacidad}"></span> toneladas
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -89,9 +101,9 @@
             </div>
 
             <div th:if="${plantas != null and plantas.isEmpty()}" class="mt-4 alert alert-warning">
-                No se encontraron plantas.
+                <i class="fas fa-info-circle me-2"></i>
+                No se encontraron plantas para la fecha seleccionada.
             </div>
-        </div>
     </div>
 
     <!-- 3. CREAR RUTA -->

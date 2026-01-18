@@ -144,12 +144,12 @@
                 <form th:action="@{/contenedores/consultar-zona}" method="get" class="row g-3">
                     <div class="col-md-6">
                         <label for="codPostalConsulta" class="form-label">Código postal</label>
-                        <input type="text" id="codPostalConsulta" name="codPostalConsulta" class="form-control" required />
+                        <input type="text" id="codPostalConsulta" name="codPostal" class="form-control" required />
                     </div>
 
                     <div class="col-md-4">
                         <label for="fechaZona" class="form-label">Fecha</label>
-                        <input type="date" id="fechaZona" name="fechaZona" class="form-control" required />
+                        <input type="date" id="fechaZona" name="fecha" class="form-control" required />
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-info text-white">
@@ -183,9 +183,9 @@
                                     <td th:text="${cont.capacidadMax}"></td>
                                     <td th:text="${cont.capacidadActual}"></td>
                                     <td>
-                                        <span th:if="${cont.nivelLlenado == NivelLlenado.ROJO}" class="badge bg-danger">Lleno</span>
-                                        <span th:if="${cont.nivelLlenado == NivelLlenado.NARANJA}" class="badge bg-warning">Espacio limitado</span>
-                                        <span th:if="${cont.nivelLlenado == NivelLlenado.VERDE}" class="badge bg-success">Espacio disponible</span>
+                                        <span th:if="${cont.nivelLlenado.toString() == 'ROJO'}" class="badge bg-danger">Lleno</span>
+                                        <span th:if="${cont.nivelLlenado.toString() == 'NARANJA'}" class="badge bg-warning text-dark">Espacio limitado</span>
+                                        <span th:if="${cont.nivelLlenado.toString() == 'VERDE'}" class="badge bg-success">Espacio disponible</span>
                                     </td>
                                 </tr>
                             </tbody>

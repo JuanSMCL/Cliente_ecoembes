@@ -8,6 +8,7 @@ public record PlantaDTOCap(
         double lat,
         String nombre,
         LocalDate fecha,
-        int capacidad
+        int capacidad,
+        String planta
 ) {
 }

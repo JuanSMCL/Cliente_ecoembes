@@ -3,12 +3,7 @@ package es.deusto.sd.ecoembes.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.deusto.sd.ecoembes.client.data.ContenedorCreacion;
-import es.deusto.sd.ecoembes.client.data.ContenedorRango;
-import es.deusto.sd.ecoembes.client.data.ContenedorZona;
-import es.deusto.sd.ecoembes.client.data.PlantaDTOCap;
-import es.deusto.sd.ecoembes.client.data.RutaDTO;
-import es.deusto.sd.ecoembes.client.data.Usuario;
+import es.deusto.sd.ecoembes.client.data.*;
 import es.deusto.sd.ecoembes.client.proxies.IServiceProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,7 +88,6 @@ public class WebController {
         RutaDTO ruta = new RutaDTO(contenedoresId, camionId, plantaReciclaje);
         try {
             proxy.crearRuta(token, ruta);
-            model.addAttribute("successMessage", "Ruta creada correctamente");
             model.addAttribute("rutaCreada", true);
 
         } catch (Exception e){
@@ -163,6 +157,9 @@ public class WebController {
         try {
             List<PlantaDTOCap> resultado =
                     proxy.consultarCapacidadPlantas(plantaFecha, token);
+            model.addAttribute("plantasReciclaje", proxy.getPlantas());
+
+
 
             model.addAttribute("plantas", resultado);
 
@@ -189,7 +186,7 @@ public class WebController {
 
         ContenedorCreacion contenedor =
                 new ContenedorCreacion(lon, lat, codPostal, capacidadMax);
-
+        System.out.println("Contenedor creado" + contenedor);
         try {
             proxy.crearContenedor(token, contenedor);
             model.addAttribute("successMessage", "Contenedor creado correctamente");
@@ -201,7 +198,7 @@ public class WebController {
     }
 
     //Funcion 5
-    @GetMapping("/contenedores/consultarZona")
+    @GetMapping("/contenedores/consultar-zona")
     public String consultarContenedoresZona(
             @RequestParam String codPostal,
             @RequestParam LocalDate fecha,
@@ -214,7 +211,8 @@ public class WebController {
         try {
             List<ContenedorZona> resultado =
                     proxy.consultarEstadoContenedoresZona(codPostal, fecha, token);
-
+            System.out.println("Controller");
+            System.out.println(resultado);
             model.addAttribute("contenedoresZona", resultado);
 
         } catch (Exception e) {
@@ -223,6 +221,7 @@ public class WebController {
 
         return "contenedores";
     }
+
 
 
 

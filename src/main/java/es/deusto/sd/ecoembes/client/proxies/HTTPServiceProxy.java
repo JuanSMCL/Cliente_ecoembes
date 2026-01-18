@@ -29,7 +29,7 @@ public class HTTPServiceProxy implements IServiceProxy {
         this.httpClient = httpClient;
 
         // Solución de CHATGPT ante error de fechas de Estado en la función 4
-            // Registrar módulo para Java 8 Time y configurar fechas ISO
+        // Registrar módulo para Java 8 Time y configurar fechas ISO
         this.objectMapper = objectMapper.copy(); // Copiar para no modificar otros usos
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -82,9 +82,9 @@ public class HTTPServiceProxy implements IServiceProxy {
         } catch (IOException | InterruptedException e){
             throw new RuntimeException("Ha habido un error al procesar la peticion");
         }
-
-
     }
+
+
 
     @Override
     public boolean logout(String token) {
@@ -115,7 +115,7 @@ public class HTTPServiceProxy implements IServiceProxy {
     @Override
     public List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, String token) {
         try {
-            String url = BASE_URL + "/capacidadPlantas"
+            String url = BASE_URL + "/platas/capacidad"
                     + "?fecha=" + fecha
                     + "&token=" + token;
 
@@ -126,6 +126,7 @@ public class HTTPServiceProxy implements IServiceProxy {
 
             HttpResponse<String> response =
                     httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
 
             return switch (response.statusCode()) {
                 case 200 -> objectMapper.readValue(
@@ -143,6 +144,8 @@ public class HTTPServiceProxy implements IServiceProxy {
             throw new RuntimeException("Ha habido un error al procesar la petición", e);
         }
     }
+
+
 
     @Override
     public List<String> getPlantas() {
@@ -191,7 +194,7 @@ public class HTTPServiceProxy implements IServiceProxy {
     public void crearContenedor(String token, ContenedorCreacion contenedor) {
         try {
             String json = objectMapper.writeValueAsString(contenedor);
-
+            System.out.println("Json" + json);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/contenedor?token=" + token))
                     .header("Content-Type", "application/json")
@@ -200,7 +203,7 @@ public class HTTPServiceProxy implements IServiceProxy {
 
             HttpResponse<String> response =
                     httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
+            System.out.println("Code" +response.statusCode());
             if (response.statusCode() != 200 && response.statusCode() != 201) {
                 throw new RuntimeException("Error al crear el contenedor: " + response.body());
             }
@@ -217,7 +220,7 @@ public class HTTPServiceProxy implements IServiceProxy {
             String token
     ) {
         try {
-            String url = BASE_URL + "/contenedores/zona"
+            String url = BASE_URL + "/contenedor"
                     + "?codPostal=" + codPostal
                     + "&fecha=" + fecha
                     + "&token=" + token;
@@ -229,7 +232,8 @@ public class HTTPServiceProxy implements IServiceProxy {
 
             HttpResponse<String> response =
                     httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
+            System.out.println("Service");
+            System.out.println(response.statusCode() + response.body());
             return switch (response.statusCode()) {
                 case 200 -> objectMapper.readValue(
                         response.body(),
