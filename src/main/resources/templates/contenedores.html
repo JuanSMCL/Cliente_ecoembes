@@ -51,15 +51,15 @@
                 <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Crear Nuevo Contenedor</h5>
             </div>
             <div class="card-body">
-                <form th:action="@{/contenedores/crear}" method="post" class="row g-3">
+                <form th:action="@{/contenedor/crear}" method="post" class="row g-3">
                     <div class="col-md-6">
-                        <label for="longitud" class="form-label">Longitud</label>
-                        <input type="text" id="longitud" name="longitud" class="form-control" required />
+                        <label for="lon" class="form-label">Longitud</label>
+                        <input type="text" id="lon" name="lon" class="form-control" required />
                     </div>
 
                     <div class="col-md-6">
-                        <label for="latitud" class="form-label">Latitud</label>
-                        <input type="text" id="latitud" name="latitud" class="form-control" required />
+                        <label for="lat" class="form-label">Latitud</label>
+                        <input type="text" id="lat" name="lat" class="form-control" required />
                     </div>
 
                     <div class="col-md-6">
@@ -68,8 +68,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="capacidad" class="form-label">Capacidad máxima (toneladas)</label>
-                        <input type="number" id="capacidad" name="capacidad" class="form-control" 
+                        <label for="capacidadMax" class="form-label">Capacidad máxima (toneladas)</label>
+                        <input type="number" id="capacidadMax" name="capacidadMax" class="form-control" 
                                placeholder="1000" min="1" required />
                     </div>
 
