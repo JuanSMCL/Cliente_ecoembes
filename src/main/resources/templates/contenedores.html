@@ -99,12 +99,12 @@
 
                     <div class="col-md-4">
                         <label for="fechaIni" class="form-label">Fecha inicial</label>
-                        <input type="date" id="fechaIni" name="fechaIni" class="form-control" required value="2025-11-03"/>
+                        <input type="date" id="fechaIni" name="fechaIni" class="form-control" required/>
                     </div>
 
                     <div class="col-md-4">
                         <label for="fechaFin" class="form-label">Fecha final</label>
-                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required value="2025-11-09"/>
+                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required/>
                     </div>
 
                     <div class="col-12">
@@ -144,7 +144,8 @@
                 <form th:action="@{/contenedores/consultar-zona}" method="get" class="row g-3">
                     <div class="col-md-6">
                         <label for="codPostalConsulta" class="form-label">Código postal</label>
-                        <input type="text" id="codPostalConsulta" name="codPostal" class="form-control" required />
+                        <input type="text" id="codPostalConsulta" name="codPostal" class="form-control" required
+                        placeholder="28003"/>
                     </div>
 
                     <div class="col-md-4">
