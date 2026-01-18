@@ -113,11 +113,11 @@ public class HTTPServiceProxy implements IServiceProxy {
 
 
     @Override
-    public List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, long token) {
+    public List<PlantaDTOCap> consultarCapacidadPlantas(LocalDate fecha, String token) {
         try {
             String url = BASE_URL + "/capacidadPlantas"
                     + "?fecha=" + fecha
-                    + "&token=";
+                    + "&token=" + token;
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
