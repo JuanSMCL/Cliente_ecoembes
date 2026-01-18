@@ -23,9 +23,11 @@
                 <a th:href="@{/contenedores}" class="btn btn-outline-primary me-2">
                     <i class="fas fa-dumpster me-1"></i>Contenedores
                 </a>
-                <a th:href="@{/logout}" class="btn btn-danger">
-                    <i class="fas fa-sign-out-alt me-1"></i>Salir
-                </a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
